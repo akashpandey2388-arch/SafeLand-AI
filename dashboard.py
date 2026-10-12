@@ -15,14 +15,6 @@ from ai.detector import ObjectDetector
 from navigation.decision import DecisionModule
 from logs.flight_logger import flight_logger
 
-# Cached loader for native proprietary 30-sec drone video
-@st.cache_data
-def load_drone_video_b64():
-    video_path = os.path.join(os.path.dirname(__file__), "assets", "drone_recon_30s.mp4")
-    if os.path.exists(video_path):
-        with open(video_path, "rb") as f:
-            return base64.b64encode(f.read()).decode("utf-8")
-    return None
 
 # --- PAGE CONFIG ---
 st.set_page_config(
@@ -213,21 +205,11 @@ st.markdown("""
         letter-spacing: 1px;
     }
     
-    .hero-video-embed {
-        position: relative;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-        height: 0;
-        overflow: hidden;
-        background: #000;
-    }
-    
-    .hero-video-embed iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
+    [data-testid="stVideo"] video {
+        border-radius: 0 0 8px 8px !important;
+        box-shadow: 0 0 25px rgba(14, 165, 233, 0.25), 0 15px 35px rgba(0, 0, 0, 0.9) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        border-top: none !important;
     }
     
     .hero-cta-group {
@@ -576,63 +558,40 @@ if page == "🏠 Overview (Landing Page)":
     
     drone_vid_b64 = load_drone_video_b64()
     
-    if drone_vid_b64:
-        video_player_markup = f"""
-        <video autoplay loop muted playsinline controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-            <source src="data:video/mp4;base64,{drone_vid_b64}" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-        """
-    else:
-        video_player_markup = """
-        <iframe 
-            src="https://www.youtube.com/embed/VucKgyB_RmI?autoplay=1&mute=1&loop=1&playlist=VucKgyB_RmI&start=0&end=30&controls=1&rel=0&modestbranding=1" 
-            title="Autonomous Drone Aerial Intelligence" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
-        """
+    video_path = os.path.join(os.path.dirname(__file__), "assets", "drone_recon_30s.mp4")
 
     # 1. HERO SECTION WITH RUNNING 30-SEC NATIVE DRONE VIDEO
     st.markdown('<div id="home"></div><div id="drone-video"></div>', unsafe_allow_html=True)
     
-    st.markdown(f"""
-    <div class="hero-container">
-        <div class="hero-grid">
-            <div>
-                <div class="hero-badge">
-                    <span class="dot dot-green"></span> SYSTEM READY // ARDUPILOT & SITL COMPATIBLE
-                </div>
-                <div class="hero-headline">INTELLIGENCE IN THE SKY</div>
-                <div class="hero-title">Autonomous Drone AI</div>
-                <div class="hero-desc">
-                    Intelligent aerial monitoring powered by computer vision, real-time object detection, and safety-aware automation. Built for mission readiness in research, inspection, and autonomous navigation.
-                </div>
-                <div class="hero-cta-group">
-                    <a href="#features" class="btn-hero-primary">
-                        ⚙ Explore Technology
-                    </a>
-                    <a href="#overview" class="btn-hero-secondary">
-                        📊 Live Telemetry Status
-                    </a>
-                </div>
-            </div>
-            <div>
-                <div class="hero-video-box">
-                    <div class="hero-video-topbar">
-                        <span style="display:flex; align-items:center; gap:6px;">
-                            <span class="dot dot-red"></span> ONBOARD OPTICAL SENSOR // 30s RECON
-                        </span>
-                        <span>1080p 60FPS</span>
-                    </div>
-                    <div class="hero-video-embed">
-                        {video_player_markup}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    hero_col1, hero_col2 = st.columns([1.15, 1], gap="medium")
+    
+    with hero_col1:
+        st.markdown("""<div style="padding: 10px 0;">
+<div class="hero-badge">
+    <span class="dot dot-green"></span> SYSTEM READY // ARDUPILOT & SITL COMPATIBLE
+</div>
+<div class="hero-headline">INTELLIGENCE IN THE SKY</div>
+<div class="hero-title">Autonomous Drone AI</div>
+<div class="hero-desc">
+    Intelligent aerial monitoring powered by computer vision, real-time object detection, and safety-aware automation. Built for mission readiness in research, inspection, and autonomous navigation.
+</div>
+<div class="hero-cta-group">
+    <a href="#features" class="btn-hero-primary">⚙ Explore Technology</a>
+    <a href="#overview" class="btn-hero-secondary">📊 Live Telemetry Status</a>
+</div>
+</div>""", unsafe_allow_html=True)
+        
+    with hero_col2:
+        st.markdown("""<div class="hero-video-topbar" style="border-radius: 8px 8px 0 0;">
+    <span style="display:flex; align-items:center; gap:6px;">
+        <span class="dot dot-red"></span> ONBOARD OPTICAL SENSOR // 30s RECON
+    </span>
+    <span>1080p 60FPS</span>
+</div>""", unsafe_allow_html=True)
+        if os.path.exists(video_path):
+            st.video(video_path, autoplay=True, loop=True, muted=True)
+        else:
+            st.video("https://www.youtube.com/watch?v=VucKgyB_RmI", autoplay=True, loop=True, muted=True)
     
     # Quick Action trigger bar (Launch operational tools)
     q1, q2, q3 = st.columns(3)
@@ -701,50 +660,45 @@ if page == "🏠 Overview (Landing Page)":
     # 3. NATIVE DRONE VIDEO SECTION
     st.markdown('<div id="drone-video"></div>', unsafe_allow_html=True)
     
-    st.markdown(f"""
-    <div class="video-section-box">
-        <div class="video-header">
-            <div>
-                <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #14b8a6; letter-spacing: 2px;">
-                    MISSION REPLAY // ONBOARD OPTICAL TELEMETRY
-                </div>
-                <h2 style="margin: 0; font-size: 32px; color: #f8fafc;">Live Aerial Reconnaissance</h2>
-                <p style="color: #94a3b8; font-size: 15px; margin: 4px 0 0 0;">
-                    30-second high-definition autonomous aerial reconnaissance, flight vectors, and target scanning.
-                </p>
-            </div>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <span class="badge badge-ok">
-                    ⏱️ 30 SEC AUTONOMOUS LOOP
-                </span>
-                <span class="badge badge-ok">
-                    <span class="dot dot-green"></span> ONBOARD SENSOR
-                </span>
-            </div>
-        </div>
-        
-        <div class="video-frame-wrap">
-            {video_player_markup}
-        </div>
-        
-        <div class="video-meta-bar">
-            <div style="display: flex; gap: 18px; align-items: center; color: #cbd5e1; font-family: 'Share Tech Mono', monospace; font-size: 12px;">
-                <span>DURATION: <b>0:30 (30 SECONDS)</b></span>
-                <span>•</span>
-                <span>FPS: <b>60</b></span>
-                <span>•</span>
-                <span>RESOLUTION: <b>1080p FHD</b></span>
-                <span>•</span>
-                <span>STORAGE: <b>AUTONOMOUS FLIGHT COMPANION MP4</b></span>
-            </div>
-            <div>
-                <span style="color: #34d399; font-family: 'Share Tech Mono', monospace; font-size: 12px; font-weight: 600;">
-                    ● NATIVE ENCRYPTED VIDEO FEED
-                </span>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div class="video-section-box">
+<div class="video-header">
+<div>
+<div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #14b8a6; letter-spacing: 2px;">
+MISSION REPLAY // ONBOARD OPTICAL TELEMETRY
+</div>
+<h2 style="margin: 0; font-size: 32px; color: #f8fafc;">Live Aerial Reconnaissance</h2>
+<p style="color: #94a3b8; font-size: 15px; margin: 4px 0 0 0;">
+30-second high-definition autonomous aerial reconnaissance, flight vectors, and target scanning.
+</p>
+</div>
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+<span class="badge badge-ok">⏱️ 30 SEC AUTONOMOUS LOOP</span>
+<span class="badge badge-ok"><span class="dot dot-green"></span> ONBOARD SENSOR</span>
+</div>
+</div>
+</div>""", unsafe_allow_html=True)
+    
+    if os.path.exists(video_path):
+        st.video(video_path, autoplay=True, loop=True, muted=True)
+    else:
+        st.video("https://www.youtube.com/watch?v=VucKgyB_RmI", autoplay=True, loop=True, muted=True)
+
+    st.markdown("""<div class="video-meta-bar" style="margin-top: 10px;">
+<div style="display: flex; gap: 18px; align-items: center; color: #cbd5e1; font-family: 'Share Tech Mono', monospace; font-size: 12px;">
+<span>DURATION: <b>0:30 (30 SECONDS)</b></span>
+<span>•</span>
+<span>FPS: <b>60</b></span>
+<span>•</span>
+<span>RESOLUTION: <b>1080p FHD</b></span>
+<span>•</span>
+<span>STORAGE: <b>AUTONOMOUS FLIGHT COMPANION MP4</b></span>
+</div>
+<div>
+<span style="color: #34d399; font-family: 'Share Tech Mono', monospace; font-size: 12px; font-weight: 600;">
+● NATIVE ENCRYPTED VIDEO FEED
+</span>
+</div>
+</div>""", unsafe_allow_html=True)
 
     # 4. FEATURES SECTION
     st.markdown('<div id="features"></div>', unsafe_allow_html=True)
