@@ -1,3 +1,5 @@
+import os
+import base64
 import streamlit as st
 import cv2
 import time
@@ -12,6 +14,15 @@ from safety.safety_manager import SafetyManager
 from ai.detector import ObjectDetector
 from navigation.decision import DecisionModule
 from logs.flight_logger import flight_logger
+
+# Cached loader for native proprietary 30-sec drone video
+@st.cache_data
+def load_drone_video_b64():
+    video_path = os.path.join(os.path.dirname(__file__), "assets", "drone_recon_30s.mp4")
+    if os.path.exists(video_path):
+        with open(video_path, "rb") as f:
+            return base64.b64encode(f.read()).decode("utf-8")
+    return None
 
 # --- PAGE CONFIG ---
 st.set_page_config(
@@ -563,10 +574,29 @@ with st.sidebar:
 # ==========================================
 if page == "🏠 Overview (Landing Page)":
     
-    # 1. HERO SECTION WITH RUNNING 30-SEC DRONE VIDEO
+    drone_vid_b64 = load_drone_video_b64()
+    
+    if drone_vid_b64:
+        video_player_markup = f"""
+        <video autoplay loop muted playsinline controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+            <source src="data:video/mp4;base64,{drone_vid_b64}" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        """
+    else:
+        video_player_markup = """
+        <iframe 
+            src="https://www.youtube.com/embed/VucKgyB_RmI?autoplay=1&mute=1&loop=1&playlist=VucKgyB_RmI&start=0&end=30&controls=1&rel=0&modestbranding=1" 
+            title="Autonomous Drone Aerial Intelligence" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+        </iframe>
+        """
+
+    # 1. HERO SECTION WITH RUNNING 30-SEC NATIVE DRONE VIDEO
     st.markdown('<div id="home"></div><div id="drone-video"></div>', unsafe_allow_html=True)
     
-    st.markdown("""
+    st.markdown(f"""
     <div class="hero-container">
         <div class="hero-grid">
             <div>
@@ -582,8 +612,8 @@ if page == "🏠 Overview (Landing Page)":
                     <a href="#features" class="btn-hero-primary">
                         ⚙ Explore Technology
                     </a>
-                    <a href="https://youtu.be/VucKgyB_RmI?si=W_RITDWDm3poYe2Z" target="_blank" class="btn-hero-secondary">
-                        ↗ Full YouTube Stream
+                    <a href="#overview" class="btn-hero-secondary">
+                        📊 Live Telemetry Status
                     </a>
                 </div>
             </div>
@@ -591,17 +621,12 @@ if page == "🏠 Overview (Landing Page)":
                 <div class="hero-video-box">
                     <div class="hero-video-topbar">
                         <span style="display:flex; align-items:center; gap:6px;">
-                            <span class="dot dot-red"></span> LIVE AERIAL STREAM // 30s RECON
+                            <span class="dot dot-red"></span> ONBOARD OPTICAL SENSOR // 30s RECON
                         </span>
                         <span>1080p 60FPS</span>
                     </div>
                     <div class="hero-video-embed">
-                        <iframe 
-                            src="https://www.youtube.com/embed/VucKgyB_RmI?autoplay=1&mute=1&loop=1&playlist=VucKgyB_RmI&start=0&end=30&controls=1&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Autonomous Drone Aerial Intelligence" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen>
-                        </iframe>
+                        {video_player_markup}
                     </div>
                 </div>
             </div>
@@ -673,38 +698,33 @@ if page == "🏠 Overview (Landing Page)":
 
     st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
 
-    # 3. YOUTUBE VIDEO SECTION (Embedded Directly into Homepage)
+    # 3. NATIVE DRONE VIDEO SECTION
     st.markdown('<div id="drone-video"></div>', unsafe_allow_html=True)
     
-    st.markdown("""
+    st.markdown(f"""
     <div class="video-section-box">
         <div class="video-header">
             <div>
                 <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #14b8a6; letter-spacing: 2px;">
-                    FIELD OPERATIONS // 30-SEC AERIAL RECONNAISSANCE
+                    MISSION REPLAY // ONBOARD OPTICAL TELEMETRY
                 </div>
-                <h2 style="margin: 0; font-size: 32px; color: #f8fafc;">Live Aerial Intelligence</h2>
+                <h2 style="margin: 0; font-size: 32px; color: #f8fafc;">Live Aerial Reconnaissance</h2>
                 <p style="color: #94a3b8; font-size: 15px; margin: 4px 0 0 0;">
                     30-second high-definition autonomous aerial reconnaissance, flight vectors, and target scanning.
                 </p>
             </div>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <span class="badge badge-ok">
-                    ⏱️ 30 SEC DURATION
+                    ⏱️ 30 SEC AUTONOMOUS LOOP
                 </span>
-                <span class="badge badge-warn">
-                    <span class="dot dot-red"></span> DEMO FOOTAGE
+                <span class="badge badge-ok">
+                    <span class="dot dot-green"></span> ONBOARD SENSOR
                 </span>
             </div>
         </div>
         
         <div class="video-frame-wrap">
-            <iframe 
-                src="https://www.youtube.com/embed/VucKgyB_RmI?start=0&end=30&rel=0&modestbranding=1&enablejsapi=1" 
-                title="Autonomous Drone Aerial Intelligence" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
+            {video_player_markup}
         </div>
         
         <div class="video-meta-bar">
@@ -715,12 +735,12 @@ if page == "🏠 Overview (Landing Page)":
                 <span>•</span>
                 <span>RESOLUTION: <b>1080p FHD</b></span>
                 <span>•</span>
-                <span>SOURCE: <b>AUTONOMOUS UAS LOG ARCHIVE</b></span>
+                <span>STORAGE: <b>AUTONOMOUS FLIGHT COMPANION MP4</b></span>
             </div>
             <div>
-                <a href="https://youtu.be/VucKgyB_RmI?si=W_RITDWDm3poYe2Z" target="_blank" style="color: #38bdf8; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                    ↗ Open Full Video on YouTube
-                </a>
+                <span style="color: #34d399; font-family: 'Share Tech Mono', monospace; font-size: 12px; font-weight: 600;">
+                    ● NATIVE ENCRYPTED VIDEO FEED
+                </span>
             </div>
         </div>
     </div>
