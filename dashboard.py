@@ -113,65 +113,115 @@ st.markdown("""
     /* Hero Section */
     .hero-container {
         position: relative;
-        padding: 50px 40px;
-        background: radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.15) 0%, rgba(15, 23, 42, 0.6) 60%, rgba(5, 8, 16, 0.95) 100%),
+        padding: 35px 30px;
+        background: radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.15) 0%, rgba(15, 23, 42, 0.7) 60%, rgba(5, 8, 16, 0.95) 100%),
                     linear-gradient(180deg, rgba(8, 14, 28, 0.8) 0%, rgba(5, 8, 16, 0.95) 100%);
-        border: 1px solid rgba(56, 189, 248, 0.25);
+        border: 1px solid rgba(56, 189, 248, 0.3);
         border-top: 3px solid #0ea5e9;
         border-radius: 14px;
-        margin-bottom: 35px;
+        margin-bottom: 30px;
         overflow: hidden;
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(14, 165, 233, 0.08);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(14, 165, 233, 0.1);
+    }
+    
+    .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 28px;
+        align-items: center;
+    }
+    
+    @media (max-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: 1fr;
+        }
     }
     
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 6px 14px;
-        background: rgba(14, 165, 233, 0.1);
+        padding: 5px 12px;
+        background: rgba(14, 165, 233, 0.12);
         border: 1px solid rgba(56, 189, 248, 0.4);
         border-radius: 4px;
         font-family: 'Share Tech Mono', monospace;
-        font-size: 12px;
+        font-size: 11px;
         color: #38bdf8;
         letter-spacing: 2px;
-        margin-bottom: 18px;
+        margin-bottom: 12px;
         text-transform: uppercase;
     }
     
     .hero-headline {
         font-family: 'Share Tech Mono', monospace;
-        font-size: 15px;
+        font-size: 14px;
         color: #14b8a6;
         letter-spacing: 3px;
         text-transform: uppercase;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
     
     .hero-title {
         font-family: 'Rajdhani', sans-serif !important;
-        font-size: 58px !important;
+        font-size: 46px !important;
         font-weight: 800 !important;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         line-height: 1.05;
         background: linear-gradient(120deg, #ffffff 30%, #38bdf8 70%, #14b8a6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
     
     .hero-desc {
-        font-size: 18px;
+        font-size: 16px;
         line-height: 1.6;
         color: #cbd5e1;
-        max-width: 680px;
-        margin-bottom: 30px;
+        margin-bottom: 24px;
+    }
+    
+    .hero-video-box {
+        background: #020617;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 25px rgba(14, 165, 233, 0.25), 0 15px 35px rgba(0, 0, 0, 0.9);
+    }
+    
+    .hero-video-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 14px;
+        background: rgba(15, 23, 42, 0.95);
+        border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 11px;
+        color: #38bdf8;
+        letter-spacing: 1px;
+    }
+    
+    .hero-video-embed {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        background: #000;
+    }
+    
+    .hero-video-embed iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
     }
     
     .hero-cta-group {
         display: flex;
-        gap: 16px;
+        gap: 14px;
         align-items: center;
         flex-wrap: wrap;
     }
@@ -513,26 +563,48 @@ with st.sidebar:
 # ==========================================
 if page == "🏠 Overview (Landing Page)":
     
-    # 1. HERO SECTION
-    st.markdown('<div id="home"></div>', unsafe_allow_html=True)
+    # 1. HERO SECTION WITH RUNNING 30-SEC DRONE VIDEO
+    st.markdown('<div id="home"></div><div id="drone-video"></div>', unsafe_allow_html=True)
     
     st.markdown("""
     <div class="hero-container">
-        <div class="hero-badge">
-            <span class="dot dot-green"></span> SYSTEM READY // ARDUPILOT & SITL COMPATIBLE
-        </div>
-        <div class="hero-headline">INTELLIGENCE IN THE SKY</div>
-        <div class="hero-title">Autonomous Drone AI</div>
-        <div class="hero-desc">
-            Intelligent aerial monitoring powered by computer vision, real-time object detection, and safety-aware automation. Built for mission readiness in research, inspection, and autonomous navigation.
-        </div>
-        <div class="hero-cta-group">
-            <a href="#drone-video" class="btn-hero-primary">
-                ▶ Watch Drone Video
-            </a>
-            <a href="#features" class="btn-hero-secondary">
-                ⚙ Explore Technology
-            </a>
+        <div class="hero-grid">
+            <div>
+                <div class="hero-badge">
+                    <span class="dot dot-green"></span> SYSTEM READY // ARDUPILOT & SITL COMPATIBLE
+                </div>
+                <div class="hero-headline">INTELLIGENCE IN THE SKY</div>
+                <div class="hero-title">Autonomous Drone AI</div>
+                <div class="hero-desc">
+                    Intelligent aerial monitoring powered by computer vision, real-time object detection, and safety-aware automation. Built for mission readiness in research, inspection, and autonomous navigation.
+                </div>
+                <div class="hero-cta-group">
+                    <a href="#features" class="btn-hero-primary">
+                        ⚙ Explore Technology
+                    </a>
+                    <a href="https://youtu.be/VucKgyB_RmI?si=W_RITDWDm3poYe2Z" target="_blank" class="btn-hero-secondary">
+                        ↗ Full YouTube Stream
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="hero-video-box">
+                    <div class="hero-video-topbar">
+                        <span style="display:flex; align-items:center; gap:6px;">
+                            <span class="dot dot-red"></span> LIVE AERIAL STREAM // 30s RECON
+                        </span>
+                        <span>1080p 60FPS</span>
+                    </div>
+                    <div class="hero-video-embed">
+                        <iframe 
+                            src="https://www.youtube.com/embed/VucKgyB_RmI?autoplay=1&mute=1&loop=1&playlist=VucKgyB_RmI&start=0&end=30&controls=1&rel=0&modestbranding=1&enablejsapi=1" 
+                            title="Autonomous Drone Aerial Intelligence" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
