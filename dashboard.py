@@ -609,23 +609,26 @@ if page == "🏠 Overview (Landing Page)":
         <div class="video-header">
             <div>
                 <div style="font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #14b8a6; letter-spacing: 2px;">
-                    FIELD OPERATIONS // VIDEO FEED
+                    FIELD OPERATIONS // 30-SEC AERIAL RECONNAISSANCE
                 </div>
                 <h2 style="margin: 0; font-size: 32px; color: #f8fafc;">Live Aerial Intelligence</h2>
                 <p style="color: #94a3b8; font-size: 15px; margin: 4px 0 0 0;">
-                    Explore autonomous aerial vision, flight patterns, and multi-rotor operations in complex environments.
+                    30-second high-definition autonomous aerial reconnaissance, flight vectors, and target scanning.
                 </p>
             </div>
-            <div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge-ok">
+                    ⏱️ 30 SEC DURATION
+                </span>
                 <span class="badge badge-warn">
-                    <span class="dot dot-red"></span> DEMONSTRATION FOOTAGE
+                    <span class="dot dot-red"></span> DEMO FOOTAGE
                 </span>
             </div>
         </div>
         
         <div class="video-frame-wrap">
             <iframe 
-                src="https://www.youtube.com/embed/VucKgyB_RmI?rel=0&modestbranding=1&enablejsapi=1" 
+                src="https://www.youtube.com/embed/VucKgyB_RmI?start=0&end=30&rel=0&modestbranding=1&enablejsapi=1" 
                 title="Autonomous Drone Aerial Intelligence" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                 allowfullscreen>
@@ -634,6 +637,8 @@ if page == "🏠 Overview (Landing Page)":
         
         <div class="video-meta-bar">
             <div style="display: flex; gap: 18px; align-items: center; color: #cbd5e1; font-family: 'Share Tech Mono', monospace; font-size: 12px;">
+                <span>DURATION: <b>0:30 (30 SECONDS)</b></span>
+                <span>•</span>
                 <span>FPS: <b>60</b></span>
                 <span>•</span>
                 <span>RESOLUTION: <b>1080p FHD</b></span>
@@ -642,7 +647,7 @@ if page == "🏠 Overview (Landing Page)":
             </div>
             <div>
                 <a href="https://youtu.be/VucKgyB_RmI?si=W_RITDWDm3poYe2Z" target="_blank" style="color: #38bdf8; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                    ↗ Open on YouTube (External Fallback)
+                    ↗ Open Full Video on YouTube
                 </a>
             </div>
         </div>
