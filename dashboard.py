@@ -556,8 +556,6 @@ with st.sidebar:
 # ==========================================
 if page == "🏠 Overview (Landing Page)":
     
-    drone_vid_b64 = load_drone_video_b64()
-    
     video_path = os.path.join(os.path.dirname(__file__), "assets", "drone_recon_30s.mp4")
 
     # 1. HERO SECTION WITH RUNNING 30-SEC NATIVE DRONE VIDEO
