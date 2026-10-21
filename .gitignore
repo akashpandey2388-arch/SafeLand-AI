@@ -1,4 +1,24 @@
+# Byte-compiled / cache files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*/__pycache__/
+
+# Local Backups & Scratch
 backup/
+*.bak
+
+# Logs
 *.log
+logs/*.log
+
+# Environments
+.env
+.venv/
+env/
+venv/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
